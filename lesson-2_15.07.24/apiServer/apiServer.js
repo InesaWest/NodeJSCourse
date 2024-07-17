@@ -100,12 +100,18 @@ const server = http.createServer((request, response) => {
         response.writeHead(200, { 'Content-Type': 'application/json' });
         // 3. Responce  .JSON  responce
         response.end(JSON.stringify(customers));
+        //  /api/v1/customers - GET
+        //  /api/v1/customers/{id} - GET (ONE)
+        // Example /api/v1/customers/1 - GET (ONE)
+        // Example /api/v1/customers/2 - GET (ONE)
 
-    } else {
+    } else if () {
+// A. Extract id from URL
+// B. 
+        else {
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.end('API endpoint not found')
     }
-
 });
 
 
