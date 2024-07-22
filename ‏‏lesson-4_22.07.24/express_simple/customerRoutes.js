@@ -1,8 +1,6 @@
-// 1. Import 'http' module
-const http = require('http');
-const url = require('url');
+const express = require('express');
+const router = express.Router();
 
-// 'customers' - Resource database
 const customers = [
     {
         id: 1,
@@ -146,46 +144,39 @@ const customers = [
     }
 ];
 
-// 2. Create a server
-const server = http.createServer((request, response) => {
-    // API structure
-    // -- 'http://localhost:3006/api/v1/customers' --
-    // /api/v1/customers - GET (ALL)
-    // /api/v1/customers/{id} - GET (ONE)
-    // /api/v1/customers - POST --> {body: {name:, address:, ...} }
-    // /api/v1/customers/{id} - PUT --> {body: {id:, name:, address:, ...} }
-    // /api/v1/customers/{id} - DELETE
-    // /api/v1/customers/{id} - PATCH --> {body: {id:, name:} }
 
-    // 1. Break-down URL to components
-    const parsedUrl = url.parse(request.url, true);
-    const pathname = parsedUrl.pathname; // --> /api/v1/customers
-    const method = request.method; // --> GET
-
-    // 2. Handle specific URI and METHOD request
-    // /api/v1/customers - GET (ALL)
-    if (pathname === '/api/v1/customers' && method === 'GET') {
-        response.writeHead(200, {'Content-Type': 'application/json'});
-        // 3. Response .JSON response
-        response.end(JSON.stringify(customers));
-
-    // /api/v1/customers/{id} - GET (ONE)
-    // Example: /api/v1/customers/1 - GET (ONE)
-    // Example: /api/v1/customers/2 - GET (ONE)
-    } else if () {
-        // A. Extract id from URL
-        // B. Find the customer by id
-        // C. Send the customer object as JSON to the response
-
-    // Not found
-    } else {
-        response.writeHead(404, {'Content-Type': 'text/plain'});
-        response.end('API endpoint not found!');
-    }
+// Example: /api/customers
+router.get('/', (req, res) => {
+    res.status(200).json(customers);
 });
 
-// 4. Start the server
-const PORT = 3006;
-server.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
+// Example: /api/customers
+router.post('/', (req, res) => {
+    // When using .json() middleware, I can treat .body as an object
+    console.log(req.body);
+    console.log(req.body.name);
+    res.status(201).json({ message: 'Create customer' });
 });
+
+// Example: /api/customers/:id
+router.get('/:id', (req, res) => {
+    //   const id = req.params.id;
+    const { id } = req.params;
+    console.log('id:', id);
+
+    //   res.send({ name: `ID ${id}` });
+    const customer = customers.find(c => c.id === parseInt(id));
+    console.log('customer:', customer);
+
+    res.status(200).json(customer);
+});
+
+router.get('/:id/transactions/:tran_id', (req, res) => {
+    const { id, tran_id } = req.params;
+    console.log('id:', id);
+    console.log('tran_id:', tran_id);
+
+    res.send({ name: `ID ${id}`, tran_id: `Transaction ID ${tran_id}` });
+});
+
+module.exports = router;

@@ -1,21 +1,14 @@
-// 1. Insert http module
-const http = require ("http");
+// 1. Import 'http' module
+const http = require('http');
 
-
-//2. Create a Server.
-const server = http.createServer((request,response) => {
-
-// Create a defult request/response
-response.end('Hello Word');
-
+// 2. Create a server
+const server = http.createServer((request, response) => {
+    // 3. Create a default response
+    response.end('Hello world');
 });
 
-
-
-// Start a server
-const port = 3000;
-server.listen(port, () => {
-
-    console.log (`Server is runing on port http://localhost:${port}`)
+// 4. Start the server
+const PORT = 3005;
+server.listen(PORT, () => {
+    console.log(`Server is running on port http://localhost:${PORT}`);
 });
-

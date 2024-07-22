@@ -1,10 +1,10 @@
+// 1. Import 'http' module
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const WebSocket = require('ws');
 
-// -- 1. CREATE A HTTP SERVER --
-const server = http.createServer((request, response) => {
+// 2. Create a server
+const serveStaticFile = (request, response) => {
     // 3.1 Parse URL and determine filename
     // 3.2 If no 'path' is defined, return 'index.html'
     
@@ -15,7 +15,7 @@ const server = http.createServer((request, response) => {
     // __dirname = 'c:\_nodejs_course\Lesson 1 - 8.7.24\fileServer'
     // __dirname = 'c:\_nodejs_course\Lesson 1 - 8.7.24\fileServer\public'
     // __dirname = 'c:\_nodejs_course\Lesson 1 - 8.7.24\fileServer\public\file.html'
-    const filePath = path.join(__dirname, "public", url);
+    const filePath = path.join(__dirname, "../public", url);
     const fileExt = path.extname(filePath);
     console.log(`filePath: ${filePath}`);   
 
@@ -54,33 +54,6 @@ const server = http.createServer((request, response) => {
             response.end(content, 'utf8');
         }
     });
-});
+}
 
-
-// -- 2. INITIALIZE THE WS SERVER --
-const wss = new WebSocket.Server({ server });
-
-// Handling Client Connections
-wss.on('connection', ws => {
-    // A) In case of a message from a client
-    ws.on('message', message => {
-        console.log(`Received: ${message}`);
-
-        wss.clients.forEach(client => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(message);
-            }
-        });
-    });
-
-    // B) Send a 'connection' message
-    console.log('Client connected');
-    ws.send('Welcome the chat');
-});
-
-
-// -- 3. START THE SERVER --
-const PORT = 3006;
-server.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
-});
+module.exports = { serveStaticFile };

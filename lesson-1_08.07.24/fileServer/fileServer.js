@@ -1,90 +1,63 @@
-// 1. Insert http module
-const http = require("http");
-const path = require("path");
-const fs = require("fs");
+// 1. Import 'http' module
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
 
-//2. Create a Server.
+// 2. Create a server
 const server = http.createServer((request, response) => {
-
-    // Create a defult request/response
-    //response.end('Hello Word');
-
-    // 3.1. Parse URL and  determine filename
-
-    console.log(`Request URL: ${request.url}`);
-
+    // 3.1 Parse URL and determine filename
+    // 3.2 If no 'path' is defined, return 'index.html'
+    
+    // Ternary condition
     const url = request.url === '/' ? 'index.html' : request.url;
 
+    // http://localhost:3006/file.html ==> c:\...\file.html
+    // __dirname = 'c:\_nodejs_course\Lesson 1 - 8.7.24\fileServer'
+    // __dirname = 'c:\_nodejs_course\Lesson 1 - 8.7.24\fileServer\public'
+    // __dirname = 'c:\_nodejs_course\Lesson 1 - 8.7.24\fileServer\public\file.html'
     const filePath = path.join(__dirname, "public", url);
-    console.log(`filePath: ${filePath}`);
+    const fileExt = path.extname(filePath);
+    console.log(`filePath: ${filePath}`);   
 
-    const fileExt = path.extname(filePath)
-
-
-    ////  case
-    let contentType = '';
+    // Set the corret response content type
+    let contentType = "";
 
     switch (fileExt) {
-
-        case '.html':
-            contentType = 'text-html';
+        case ".css":
+            contentType = "text/css";
             break;
-
-        case '.jpg':
-            contentType = 'image/jpeg';
-            break;
-
-        case '.css':
-            contentType = 'text/css';
-            break;
-
         default:
-            contentType = 'text-html';
-            break;
-    };
+            contentType = "text/html";
+    }
 
-    // 3.2. If no 'path' is defined, return 'index.html'
-    // 3.3. Else look for the define FILE
-
+    // 3.3 ELSE look for the desired file
+    // Read file asynchronously
     fs.readFile(filePath, (error, content) => {
-
-        // 1. Check for errors if error exists return 404.html
-        if (error) {
-
+        // 1. Check for errors, if error exists return 404.html
+        if (error != null) {
+            // Check if file doesn't exist
             if (error.code === 'ENOENT') {
-
-                const errorFile = path.join(__dirname, "public", '404.html');
+                const errorFile = path.join(__dirname, "public", "404.html");
                 fs.readFile(errorFile, (err, data) => {
-
-                    // Assumption all is well.
-                    response.writeHead(404, { 'Content-Type': contentType });
+                    // Assumption, all is well
+                    response.writeHead(404, {'Content-Type': 'text/html'});
                     response.end(data, 'utf8');
-                })
+                });
             } else {
-
-                //default 
+                // DEFAULT error handling
                 response.writeHead(500);
                 response.end(`Server error: ${error.code}`);
             }
-
         } else {
-
-            // 2. If all is well return file
-            response.writeHead(200, { 'Content-Type': contentType });
+            // 2. If all is well, return file
+            response.writeHead(200, {'Content-Type': contentType});
             response.end(content, 'utf8');
-
         }
-    })
-
-    //  response.end('Testing');
-
+    });
 });
 
-
-// Start a server
-const port = 3001;
-server.listen(port, () => {
-
-    console.log(`Server is runing on port http://localhost:${port}`);
+// 4. Start the server
+const PORT = 3006;
+server.listen(PORT, () => {
+    console.log(`Server is running on port http://localhost:${PORT}`);
 });
-

@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "tomer79sagi",
+  "author": "Tomer Sagi",
   "license": "ISC",
   "dependencies": {
-    "ws": "^8.18.0"
+    "ws": "^8.17.1"
   }
 }
