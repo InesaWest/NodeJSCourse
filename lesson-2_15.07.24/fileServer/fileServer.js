@@ -26,15 +26,15 @@ const server = http.createServer((request, response) => {
 
     switch (fileExt) {
 
-        case 'html':
+        case '.html':
             contentType = 'text-html';
             break;
 
-        case 'jpg':
+        case '.jpg':
             contentType = 'image/jpeg';
             break;
 
-        case 'css':
+        case '.css':
             contentType = 'text/css';
             break;
 
